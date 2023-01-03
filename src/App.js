@@ -2,7 +2,14 @@ import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
-  const generateRandomBlock = (grid) => {
+  const [grid, setGrid] = useState([
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+
+  const generateRandomBlock = () => {
     let emptyBlocks = [];
 
     for (let i = 0; i < grid.length; i++) {
@@ -20,16 +27,9 @@ function App() {
   };
 
   useEffect(() => {
-    generateRandomBlock(grid);
+    generateRandomBlock();
     setGrid([...grid]);
   }, []);
-
-  const [grid, setGrid] = useState([
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ]);
 
   const moveDown = () => {
     let didChange = false;
@@ -59,7 +59,7 @@ function App() {
       }
     }
 
-    if (didChange) generateRandomBlock(grid);
+    return didChange;
   };
 
   const moveUp = () => {
@@ -90,7 +90,7 @@ function App() {
       }
     }
 
-    if (didChange) generateRandomBlock(grid);
+    return didChange;
   };
 
   const moveRight = () => {
@@ -121,7 +121,7 @@ function App() {
       }
     }
 
-    if (didChange) generateRandomBlock(grid);
+    return didChange;
   };
 
   const moveLeft = () => {
@@ -152,19 +152,24 @@ function App() {
       }
     }
 
-    if (didChange) generateRandomBlock(grid);
+    return didChange;
   };
 
   const detectKeyDown = (e) => {
+    let didChange = false;
+
     if (e.key === "ArrowDown") {
-      moveDown();
+      didChange = moveDown();
     } else if (e.key === "ArrowUp") {
-      moveUp();
+      didChange = moveUp();
     } else if (e.key === "ArrowLeft") {
-      moveLeft();
+      didChange = moveLeft();
     } else if (e.key === "ArrowRight") {
-      moveRight();
+      didChange = moveRight();
     }
+
+    if (didChange) generateRandomBlock();
+
     setGrid([...grid]);
     // console.log("On KeyDown", grid);
   };
