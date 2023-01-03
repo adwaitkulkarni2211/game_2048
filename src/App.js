@@ -16,21 +16,20 @@ function App() {
     const block = emptyBlocks[Math.floor(Math.random() * emptyBlocks.length)];
 
     grid[block.row][block.col] = 2;
-    console.log("random block:", block);
+    // console.log("random block:", block);
   };
 
   useEffect(() => {
-    for (let i = 0; i < 2; i++) {
-      generateRandomBlock(grid);
-    }
+    generateRandomBlock(grid);
+    setGrid([...grid]);
   }, []);
 
-  let grid = [
+  const [grid, setGrid] = useState([
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
-  ];
+  ]);
 
   const moveDown = () => {
     let didChange = false;
@@ -156,20 +155,21 @@ function App() {
     if (didChange) generateRandomBlock(grid);
   };
 
-  useEffect(() => {
-    const detectKeyDown = (e) => {
-      if (e.key === "ArrowDown") {
-        moveDown();
-      } else if (e.key === "ArrowUp") {
-        moveUp();
-      } else if (e.key === "ArrowLeft") {
-        moveLeft();
-      } else if (e.key === "ArrowRight") {
-        moveRight();
-      }
-      console.log(grid);
-    };
+  const detectKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      moveDown();
+    } else if (e.key === "ArrowUp") {
+      moveUp();
+    } else if (e.key === "ArrowLeft") {
+      moveLeft();
+    } else if (e.key === "ArrowRight") {
+      moveRight();
+    }
+    setGrid([...grid]);
+    // console.log("On KeyDown", grid);
+  };
 
+  useEffect(() => {
     document.addEventListener("keydown", detectKeyDown);
 
     return () => document.removeEventListener("keydown", detectKeyDown);
@@ -180,7 +180,7 @@ function App() {
       {grid.map((row, idx) => (
         <div key={idx}>
           {row.map((block, idx) => (
-            <span key={idx}>{block === 0 ? "_" : block} </span>
+            <span key={idx}>{block} </span>
           ))}
         </div>
       ))}
